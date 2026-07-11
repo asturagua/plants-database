@@ -15,6 +15,7 @@ export type PlantRequest = {
 }
 
 export type CharacteristicsRequest = {
+    [key: string]: string | number | undefined
     activeGrowthPeriod?: string
     bloat?: string
     cNRatio?: string

@@ -11,11 +11,7 @@ type Plant {
     profileImageFilename: String
     profileImageUrl: String
     plantDistribution: PlantDistribution
-    #    TODO Can i use the argument in plantCharacteristic to make it so that we only get Plats with that plantcharacteristic?
-    # TODO i read that the 4th arg of resolver, info, provides a parent resolver with the whole request info.
-    plantCharacteristic(
-        flowerColor: String
-    ): PlantCharacteristic
+    plantCharacteristic: PlantCharacteristic
     durations: String
     growthHabits: String
     otherCommonNames: String
@@ -229,7 +225,7 @@ input CharacteristicsRequest {
 
 type Query {
     plants(
-        idsFilter: [String]!
+        idsFilter: [String]
         groupNamesFilter: [String]
     ): [Plant]
     plantByName(

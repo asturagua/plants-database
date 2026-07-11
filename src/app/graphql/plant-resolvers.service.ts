@@ -2,6 +2,7 @@ import {PlantService} from "../plant.service.js";
 import {ResolverInterface} from "./resolver.interface.js";
 import {NativeRequest, PlantNameRequest, PlantRequest} from "../model/requests.js";
 import {PlantMapping} from "../model/mappings.js";
+import {STATES} from "../constants.js";
 
 export class PlantResolversService implements ResolverInterface {
     private readonly service;
@@ -29,6 +30,12 @@ export class PlantResolversService implements ResolverInterface {
                 },
                 plantsNativeTo: async (_parent: any, args: NativeRequest) => {
                     try {
+                        args.statesFilter.map(state => {
+                            if (!STATES.includes(state.toUpperCase())) {
+                                // TODO better error
+                                throw new Error('Invalid state in request.');
+                            }
+                        })
                         return this.service.getPlantsNativeTo(args.statesFilter, args.includeIntroduced ?? false);
                     } catch (err) {
                         console.error(err);

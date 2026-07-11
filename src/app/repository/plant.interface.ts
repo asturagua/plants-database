@@ -16,7 +16,7 @@ export interface PlantInterface {
 
     getPlantsNativeTo(states: string[], includeIntroduced: boolean): any[] | Promise<any[]>;
 
-    getPlantDistribution(plantId: bigint): PlantDistribution[] | Promise<PlantDistribution[]>;
+    getPlantDistribution(plantId: number): PlantDistribution[] | Promise<PlantDistribution[]>;
 
-    getPlantCharacteristics(plantId: bigint): PlantCharacteristic[] | Promise<PlantCharacteristic[]>;
+    getPlantCharacteristics(plantId: number): PlantCharacteristic[] | Promise<PlantCharacteristic[]>;
 }

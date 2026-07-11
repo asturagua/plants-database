@@ -1,6 +1,7 @@
 import {PlantInterface} from "#app/repository/plant.interface.js";
 import {CharacteristicMapping, DistributionMapping, PlantMapping} from "./model/mappings.js";
 import {CharacteristicsRequest, NativeRequest} from "./model/requests.js";
+import {Plant} from "./model/database-types.js";
 
 export class PlantService {
     private readonly repository;
@@ -9,8 +10,12 @@ export class PlantService {
         this.repository = repository;
     }
 
-    getPlants() {
-        return this.repository.getPlants();
+    async getPlants(): Promise<PlantMapping[]> {
+        return (await this.repository.getPlants()).map(plant => this.mapPlantFromDb(plant));
+    }
+
+    async getPlantByName(name: string, nameType?: string): Promise<PlantMapping[]> {
+        return (await this.repository.getPlantByName(name, nameType)).map(plant => this.mapPlantFromDb(plant))
     }
 
     async getPlantsByGroupAndDistributionAndCharacteristics(
@@ -23,8 +28,9 @@ export class PlantService {
             return [];
         }
         return dbPlantsWithDistributionAndCharacteristics.map(plant => {
-            const distribution = this.mapDistributionFromDb(plant);
-            const characteristics = this.mapCharacteristicsFromDb(plant);
+            // TODO tests that verify distribution and characteristics are only set to non-null if the they were part of the request
+            const distribution = distributionFilter ? this.mapDistributionFromDb(plant) : null;
+            const characteristics = characteristicsFilter ? this.mapCharacteristicsFromDb(plant) : null;
             return {
                 acceptedId: plant.accepted_id,
                 commonName: plant.common_name,
@@ -34,7 +40,7 @@ export class PlantService {
                 factSheetUrls: plant.fact_sheet_urls,
                 groupName: plant.group_name,
                 growthHabits: plant.growth_habits,
-                id: plant.id,
+                id: plant.plant_id, // TODO I should refine the database SELECT to not include all IDs, or alias them
                 imageId: plant.image_id,
                 numImages: plant.num_images,
                 otherCommonNames: plant.other_common_names,
@@ -50,10 +56,6 @@ export class PlantService {
         })
     }
 
-    getPlantByName(name: string, nameType?: string) {
-        return this.repository.getPlantByName(name, nameType);
-    }
-
     async getPlantsNativeTo(states: string[], includeIntroduced: boolean): Promise<PlantMapping[]> {
         const dbPlantsWithDistribution = await this.repository.getPlantsNativeTo(states, includeIntroduced)
         if (!dbPlantsWithDistribution) {
@@ -62,31 +64,14 @@ export class PlantService {
         return dbPlantsWithDistribution.map(plant => {
             const distribution = this.mapDistributionFromDb(plant);
 
-            return {
-                acceptedId: plant.accepted_id,
-                commonName: plant.common_name,
-                distribution: distribution,
-                durations: plant.durations,
-                factSheetUrls: plant.fact_sheet_urls,
-                groupName: plant.group_name,
-                growthHabits: plant.growth_habits,
-                id: plant.id,
-                imageId: plant.image_id,
-                numImages: plant.num_images,
-                otherCommonNames: plant.other_common_names,
-                plantGuideUrls: plant.plant_guide_urls,
-                plantLocationId: plant.plant_location_id,
-                profileImageFilename: plant.profile_image_filename,
-                profileImageUrl: plant.profile_image_filename,
-                rank: plant.rank,
-                rankId: plant.rank_id,
-                scientificName: plant.scientific_name,
-                symbol: plant.symbol
-            }
+            const plantMapping = this.mapPlantFromDb(plant);
+            plantMapping.distribution = distribution;
+
+            return plantMapping
         });
     }
 
-    async getPlantDistribution(plantId: bigint): Promise<DistributionMapping | null> {
+    async getPlantDistribution(plantId: number): Promise<DistributionMapping | null> {
         const dbDistribution = (await this.repository.getPlantDistribution(plantId))[0];
         if (!dbDistribution) {
             return null;
@@ -94,7 +79,7 @@ export class PlantService {
         return this.mapDistributionFromDb(dbDistribution);
     }
 
-    async getPlantCharacteristics(plantId: bigint): Promise<CharacteristicMapping | null> {
+    async getPlantCharacteristics(plantId: number): Promise<CharacteristicMapping | null> {
         const dbCharacteristics = (await this.repository.getPlantCharacteristics(plantId))[0];
         if (!dbCharacteristics) {
             return null;
@@ -102,7 +87,7 @@ export class PlantService {
         return this.mapCharacteristicsFromDb(dbCharacteristics);
     }
 
-    mapDistributionFromDb(distribution: any): DistributionMapping {
+    private mapDistributionFromDb(distribution: any): DistributionMapping {
         return {
             introducedStates: distribution.introduced_states,
             nativeStates: distribution.native_states,
@@ -110,6 +95,29 @@ export class PlantService {
             totalIntroducedStates: distribution.total_introduced_states,
             totalNativeStates: distribution.total_native_states
         }
+    }
+
+    private mapPlantFromDb(plant: Plant): PlantMapping {
+        return {
+            acceptedId: plant.accepted_id,
+            commonName: plant.common_name,
+            durations: plant.durations,
+            factSheetUrls: plant.fact_sheet_urls,
+            groupName: plant.group_name,
+            growthHabits: plant.growth_habits,
+            id: plant.id,
+            imageId: plant.image_id,
+            numImages: plant.num_images,
+            otherCommonNames: plant.other_common_names,
+            plantGuideUrls: plant.plant_guide_urls,
+            plantLocationId: plant.plant_location_id,
+            profileImageFilename: plant.profile_image_filename,
+            profileImageUrl: plant.profile_image_url,
+            rank: plant.rank,
+            rankId: plant.rank_id,
+            scientificName: plant.scientific_name,
+            symbol: plant.symbol
+        };
     }
 
     private mapCharacteristicsFromDb(characteristics: any): CharacteristicMapping {
@@ -198,6 +206,7 @@ export class PlantService {
         }
     }
 
+    // TODO i probably dont need this anymore
     mapDatabaseKey(key: string) {
         return key.replace(/_./g, (result) => result[1].toUpperCase());
     }

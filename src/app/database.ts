@@ -1,6 +1,5 @@
 import path from "path";
-import sqlite3, {Database} from "sqlite3";
+import Database from "better-sqlite3";
 
 const dbPath = path.join(process.cwd(), 'database', 'plants.db')
-export const plantsDatabase: Database = new sqlite3.Database(dbPath);
-
+export const plantsDatabase: Database.Database = new Database(dbPath)

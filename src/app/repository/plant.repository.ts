@@ -1,87 +1,10 @@
 import {PlantInterface} from "#app/repository/plant.interface.js";
 import {Plant} from "#app/model/database-types.js";
-import {Database} from "sqlite3";
 import {CharacteristicsRequest, NativeRequest} from "../model/requests.js";
+import {characteristicsKeys} from "../model/mappings.js";
+import Database from "better-sqlite3";
 
 export class PlantRepository implements PlantInterface {
-    static readonly STATES = [
-        "Alabama".toUpperCase(),
-        "Alaska".toUpperCase(),
-        "Arizona".toUpperCase(),
-        "Arkansas".toUpperCase(),
-        "California".toUpperCase(),
-        "Colorado".toUpperCase(),
-        "Connecticut".toUpperCase(),
-        "Delaware".toUpperCase(),
-        "Florida".toUpperCase(),
-        "Georgia".toUpperCase(),
-        "Hawaii".toUpperCase(),
-        "Idaho".toUpperCase(),
-        "Illinois".toUpperCase(),
-        "Indiana".toUpperCase(),
-        "Iowa".toUpperCase(),
-        "Kansas".toUpperCase(),
-        "Kentucky".toUpperCase(),
-        "Louisiana".toUpperCase(),
-        "Maine".toUpperCase(),
-        "Maryland".toUpperCase(),
-        "Massachusetts".toUpperCase(),
-        "Michigan".toUpperCase(),
-        "Minnesota".toUpperCase(),
-        "Mississippi".toUpperCase(),
-        "Missouri".toUpperCase(),
-        "Montana".toUpperCase(),
-        "Nebraska".toUpperCase(),
-        "Nevada".toUpperCase(),
-        "New Hampshire".toUpperCase(),
-        "New Jersey".toUpperCase(),
-        "New Mexico".toUpperCase(),
-        "New York".toUpperCase(),
-        "North Carolina".toUpperCase(),
-        "North Dakota".toUpperCase(),
-        "Ohio".toUpperCase(),
-        "Oklahoma".toUpperCase(),
-        "Oregon".toUpperCase(),
-        "Pennsylvania".toUpperCase(),
-        "Rhode Island".toUpperCase(),
-        "South Carolina".toUpperCase(),
-        "South Dakota".toUpperCase(),
-        "Tennessee".toUpperCase(),
-        "Texas".toUpperCase(),
-        "Utah".toUpperCase(),
-        "Vermont".toUpperCase(),
-        "Virginia".toUpperCase(),
-        "Washington".toUpperCase(),
-        "West Virginia".toUpperCase(),
-        "Wisconsin".toUpperCase(),
-        "Wyoming".toUpperCase(),
-        "American Samoa".toUpperCase(),
-        "Federated States of Micronesia".toUpperCase(),
-        "Guam".toUpperCase(),
-        "Marshall Islands".toUpperCase(),
-        "Northern Mariana Islands".toUpperCase(),
-        "Palau".toUpperCase(),
-        "Puerto Rico".toUpperCase(),
-        "U.S. Minor Outlying Islands".toUpperCase(),
-        "Virgin Islands".toUpperCase(),
-        "Alberta".toUpperCase(),
-        "British Columbia".toUpperCase(),
-        "Manitoba".toUpperCase(),
-        "New Brunswick".toUpperCase(),
-        "Nova Scotia".toUpperCase(),
-        "Ontario".toUpperCase(),
-        "Prince Edward Island".toUpperCase(),
-        "Quebec".toUpperCase(),
-        "Saskatchewan".toUpperCase(),
-        "Yukon".toUpperCase(),
-        "Northwest Territories".toUpperCase(),
-        "Nunavut".toUpperCase(),
-        "Labrador".toUpperCase(),
-        "Newfoundland".toUpperCase(),
-        "Greenland".toUpperCase(),
-        "Saint Pierre and Miquelon".toUpperCase(),
-        "Navassa Island".toUpperCase(),
-    ]
     static readonly GET_PLANTS = `SELECT *
                                   FROM plants p`;
     static readonly GET_PLANTS_BY_NATIVE_STATE = `SELECT *
@@ -98,9 +21,9 @@ export class PlantRepository implements PlantInterface {
                                                            FROM plant_characteristics
                                                            WHERE plant_id = ?`;
 
-    readonly database: Database;
+    readonly database: Database.Database;
 
-    constructor(database: Database) {
+    constructor(database: Database.Database) {
         this.database = database;
     }
 
@@ -127,10 +50,10 @@ export class PlantRepository implements PlantInterface {
         characteristics?: CharacteristicsRequest): Promise<any[]> {
         let sql = PlantRepository.GET_PLANTS;
         const queryParts = [];
-        if (distribution || characteristics) {
+        if ((distribution && distribution.statesFilter) || characteristics) {
             const plantFilters = [];
             let distributionAndCharacteristicsSql = ''
-            if (distribution) {
+            if (distribution && distribution.statesFilter) {
                 distributionAndCharacteristicsSql = distributionAndCharacteristicsSql.concat(` INNER JOIN plant_distribution pd ON p.id = pd.plant_id`);
                 plantFilters.push(this.createPlantsNativeToQuery(distribution.statesFilter, distribution.includeIntroduced ?? false));
             }
@@ -160,68 +83,39 @@ export class PlantRepository implements PlantInterface {
         return await this.fetchAll(this.database, sql, []);
     }
 
-    async getPlantDistribution(plantId: bigint) {
+    async getPlantDistribution(plantId: number) {
         return await this.fetchAll(this.database, PlantRepository.GET_PLANT_DISTRIBUTION_FOR_PLANT, [plantId.toString()]);
     }
 
-    async getPlantCharacteristics(plantId: bigint) {
+    async getPlantCharacteristics(plantId: number) {
         return await this.fetchAll(this.database, PlantRepository.GET_PLANT_CHARACTERISTICS_FOR_PLANT, [plantId.toString()]);
     }
 
     createPlantsNativeToQuery(states: string[], includeIntroduced: boolean): string {
-        return "(" + states
-            .filter((state) => PlantRepository.STATES.includes(state.toUpperCase()))
-            .map((state) => {
-                let part = `UPPER(pd.native_states) like UPPER("%${state.replace(" ", "_")}%")`;
-                if (includeIntroduced) {
-                    part = part.concat(` OR UPPER(pd.introduced_states) like UPPER("%${state.replace(" ", "_")}%")`)
-                }
-                return part;
-            }).join(" OR ") + ")";
+        return "(" + states.map((state) => {
+            let part = `UPPER(pd.native_states) like UPPER('%${state.replace(" ", "_")}%')`;
+            if (includeIntroduced) {
+                part = part.concat(` OR UPPER(pd.introduced_states) like UPPER('%${state.replace(" ", "_")}%')`)
+            }
+            return part;
+        }).join(" OR ") + ")";
     }
 
-    // TODO add the rest
     createPlantsByCharacteristicsQuery(characteristics: CharacteristicsRequest): string {
-        const query = [];
-        if (characteristics.activeGrowthPeriod) {
-            query.push(`UPPER(pc.active_growth_period) = UPPER("${characteristics.activeGrowthPeriod}")`);
-        }
-        if (characteristics.adaptedToCoarseTexturedSoils) {
-            query.push(`UPPER(pc.adapted_to_coarse_textured_soils) = UPPER("${characteristics.adaptedToCoarseTexturedSoils}")`);
-        }
-        if (characteristics.adaptedToFineTexturedSoils) {
-            query.push(`UPPER(pc.adapted_to_fine_textured_soils) = UPPER("${characteristics.adaptedToFineTexturedSoils}")`);
-        }
-        if (characteristics.adaptedToMediumTexturedSoils) {
-            query.push(`UPPER(pc.adapted_to_medium_textured_soils) = UPPER("${characteristics.adaptedToMediumTexturedSoils}")`);
-        }
-        if (characteristics.anaerobicTolerance) {
-            query.push(`UPPER(pc.anaerobic_tolerance) = UPPER("${characteristics.anaerobicTolerance}")`);
-        }
-        if (characteristics.berryNutSeedProduct) {
-            query.push(`UPPER(pc.berry_nut_seed_product) = UPPER("${characteristics.berryNutSeedProduct}")`);
-        }
-        if (characteristics.bloat) {
-            query.push(`UPPER(pc.bloat) = UPPER("${characteristics.bloat}")`);
-        }
-        if (characteristics.bloomPeriod) {
-            query.push(`UPPER(pc.bloom_period) = UPPER("${characteristics.bloomPeriod}")`);
-        }
-        if (characteristics.flowerColor) {
-            query.push(`UPPER(pc.flower_color) = UPPER("${characteristics.flowerColor}")`);
-        }
+        const query: string[] = [];
+        Object.keys(characteristics).map(key => {
+            query.push(`UPPER(pc.${characteristicsKeys.get(key)}) = UPPER('${characteristics[key]}')`)
+        })
         return query.join(" AND ");
     }
 
-
-    async fetchAll(db: Database, sql: string, params: string[]) {
-        return new Promise<any[]>((resolve, reject) => {
-            db.all(sql, params, (err: Error, rows: Plant[]) => {
-                if (err) {
-                    reject(err);
-                }
-                resolve(rows);
-            })
-        })
+    async fetchAll(db:  Database.Database, sql: string, params: string[]): Promise<any> {
+        try {
+            const statement = db.prepare(sql);
+            return statement.all(...params);
+        } catch (err) {
+            console.error("Failed to execute SQL: ", sql, err);
+            throw err;
+        }
     }
 }

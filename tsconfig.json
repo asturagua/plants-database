@@ -20,7 +20,6 @@
       ".js",
       ""
     ],
-    "sourceMap": true,
 //    "paths": {
 //      "@app/*": [
 //        "./src/app/*"

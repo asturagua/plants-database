@@ -1,43 +1,45 @@
 export type PlantMapping = {
-    id: bigint
+    id: number
     symbol: string
     scientificName: string
-    commonName?: string
-    groupName?: string
-    rankId: bigint
+    commonName?: Nullable<string>
+    groupName?: Nullable<string>
+    rankId: number
     rank: string
-    acceptedId: bigint
-    numImages?: bigint
-    profileImageFilename?: string
-    profileImageUrl?: string
-    imageId?: bigint
-    plantLocationId?: bigint
-    durations?: string
-    growthHabits?: string
-    otherCommonNames?: string
-    plantGuideUrls?: string
-    factSheetUrls?: string
-    distribution?: DistributionMapping
-    characteristics?: CharacteristicMapping
+    acceptedId: number
+    numImages?: Nullable<number>
+    profileImageFilename?: Nullable<string>
+    profileImageUrl?: Nullable<string>
+    imageId?: Nullable<number>
+    plantLocationId?: Nullable<number>
+    durations?: Nullable<string>
+    growthHabits?: Nullable<string>
+    otherCommonNames?: Nullable<string>
+    plantGuideUrls?: Nullable<string>
+    factSheetUrls?: Nullable<string>
+    distribution?: Nullable<DistributionMapping>
+    characteristics?: Nullable<CharacteristicMapping>
 }
 
 export type DistributionMapping = {
-    plantId: bigint
-    nativeStates?: string
-    introducedStates?: string
-    totalNativeStates?: bigint
-    totalIntroducedStates?: bigint
+    [key: string]: Nullable<string> | number | undefined
+    plantId: number
+    nativeStates?: Nullable<string>
+    introducedStates?: Nullable<string>
+    totalNativeStates?: Nullable<number>
+    totalIntroducedStates?: Nullable<number>
 }
 
 export type CharacteristicMapping = {
-    plantId: bigint
-    activeGrowthPeriod?: string
-    bloat?: string
-    cNRatio?: string
-    coppicePotential?: string
-    fallConspicuous?: string
-    fireResistant?: string
-    flowerColor?: string
+    [key: string]: Nullable<string> | number | number | undefined
+    plantId: number
+    activeGrowthPeriod?: Nullable<string>
+    bloat?: Nullable<string>
+    cNRatio?: Nullable<string>
+    coppicePotential?: Nullable<string>
+    fallConspicuous?: Nullable<string>
+    fireResistant?: Nullable<string>
+    flowerColor?: Nullable<string>
     flowerConspicuous?: string
     foliageColor?: string
     foliagePorositySummer?: string
@@ -114,7 +116,7 @@ export type CharacteristicMapping = {
 }
 
 export type PlantTaxonomicPath = {
-    plantId: bigint
+    plantId: number
     kingdom?: string
     phylum?: string
     className?: string
@@ -127,3 +129,86 @@ export type PlantTaxonomicPath = {
     form?: string
     fullPath?: string
 }
+
+export const characteristicsKeys: Map<string, string> = new Map([
+    ["activeGrowthPeriod", "active_growth_period"],
+    ["bloat", "bloat"],
+    ["cNRatio", "c_n_ratio"],
+    ["coppicePotential", "coppice_potential"],
+    ["fallConspicuous", "fall_conspicuous"],
+    ["fireResistant", "fire_resistant"],
+    ["flowerColor", "flower_color"],
+    ["flowerConspicuous", "flower_conspicuous"],
+    ["foliageColor", "foliage_color"],
+    ["foliagePorositySummer", "foliage_porosity_summer"],
+    ["foliagePorosityWinter", "foliage_porosity_winter"],
+    ["foliageTexture", "foliage_texture"],
+    ["fruitSeedColor", "fruit_seed_color"],
+    ["fruitSeedConspicuous", "fruit_seed_conspicuous"],
+    ["growthForm", "growth_form"],
+    ["growthRate", "growth_rate"],
+    ["heightAt20YearsMaximumFeet", "height_at_20_years_maximum_feet"],
+    ["heightMatureFeet", "height_mature_feet"],
+    ["knownAllelopath", "known_allelopath"],
+    ["leafRetention", "leaf_retention"],
+    ["lifespan", "lifespan"],
+    ["lowGrowingGrass", "low_growing_grass"],
+    ["nitrogenFixation", "nitrogen_fixation"],
+    ["resproutAbility", "resprout_ability"],
+    ["shapeAndOrientation", "shape_and_orientation"],
+    ["toxicity", "toxicity"],
+    ["adaptedToCoarseTexturedSoils", "adapted_to_coarse_textured_soils"],
+    ["adaptedToFineTexturedSoils", "adapted_to_fine_textured_soils"],
+    ["adaptedToMediumTexturedSoils", "adapted_to_medium_textured_soils"],
+    ["anaerobicTolerance", "anaerobic_tolerance"],
+    ["caco3Tolerance", "caco3_tolerance"],
+    ["coldStratificationRequired", "cold_stratification_required"],
+    ["droughtTolerance", "drought_tolerance"],
+    ["fertilityRequirement", "fertility_requirement"],
+    ["fireTolerance", "fire_tolerance"],
+    ["frostFreeDaysMinimum", "frost_free_days_minimum"],
+    ["hedgeTolerance", "hedge_tolerance"],
+    ["moistureUse", "moisture_use"],
+    ["phMaximum", "ph_maximum"],
+    ["phMinimum", "ph_minimum"],
+    ["plantingDensityPerAcreMaximum", "planting_density_per_acre_maximum"],
+    ["plantingDensityPerAcreMinimum", "planting_density_per_acre_minimum"],
+    ["precipitationMaximum", "precipitation_maximum"],
+    ["precipitationMinimum", "precipitation_minimum"],
+    ["rootDepthMinimum", "root_depth_minimum"],
+    ["salinityTolerance", "salinity_tolerance"],
+    ["shadeTolerance", "shade_tolerance"],
+    ["temperatureMinimumF", "temperature_minimum_f"],
+    ["bloomPeriod", "bloom_period"],
+    ["commercialAvailability", "commercial_availability"],
+    ["fruitSeedAbundance", "fruit_seed_abundance"],
+    ["fruitSeedPeriodBegin", "fruit_seed_period_begin"],
+    ["fruitSeedPeriodEnd", "fruit_seed_period_end"],
+    ["fruitSeedPersistence", "fruit_seed_persistence"],
+    ["propagatedByBareRoot", "propagated_by_bare_root"],
+    ["propagatedByBulb", "propagated_by_bulb"],
+    ["propagatedByContainer", "propagated_by_container"],
+    ["propagatedByCorm", "propagated_by_corm"],
+    ["propagatedByCuttings", "propagated_by_cuttings"],
+    ["propagatedBySeed", "propagated_by_seed"],
+    ["propagatedBySod", "propagated_by_sod"],
+    ["propagatedBySprigs", "propagated_by_sprigs"],
+    ["propagatedByTubers", "propagated_by_tubers"],
+    ["seedPerPound", "seed_per_pound"],
+    ["seedSpreadRate", "seed_spread_rate"],
+    ["seedlingVigor", "seedling_vigor"],
+    ["smallGrain", "small_grain"],
+    ["vegetativeSpreadRate", "vegetative_spread_rate"],
+    ["berryNutSeedProduct", "berry_nut_seed_product"],
+    ["christmasTreeProduct", "christmas_tree_product"],
+    ["fodderProduct", "fodder_product"],
+    ["fuelwoodProduct", "fuelwood_product"],
+    ["lumberProduct", "lumber_product"],
+    ["navalStoreProduct", "naval_store_product"],
+    ["nurseryStockProduct", "nursery_stock_product"],
+    ["palatableBrowseAnimal", "palatable_browse_animal"],
+    ["palatableHuman", "palatable_human"],
+    ["postProduct", "post_product"],
+    ["pulpwoodProduct", "pulpwood_product"],
+    ["veneerProduct", "veneer_product"],
+]);
