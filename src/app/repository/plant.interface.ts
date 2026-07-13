@@ -10,11 +10,12 @@ export interface PlantInterface {
         groups?: string[],
         distribution?: NativeRequest,
         characteristic?: CharacteristicsRequest
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     ): any[] | Promise<any[]>;
 
     getPlantByName(name: string, nameType?: string): Plant[] | Promise<Plant[]>;
 
-    getPlantsNativeTo(states: string[], includeIntroduced: boolean): any[] | Promise<any[]>;
+    getPlantsNativeTo(states: string[], includeIntroduced: boolean): Plant[] | Promise<Plant[]>;
 
     getPlantDistribution(plantId: number): PlantDistribution[] | Promise<PlantDistribution[]>;
 

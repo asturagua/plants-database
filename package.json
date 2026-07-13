@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "build": "tsc",
+    "build": "npm run lint && tsc",
+    "build-dev": "tsc",
     "start": "npm run build && node ./dist/src/app/index.js",
     "dev": "tsx watch --inspect=5000 src/app/index.ts",
     "test": "npm run build && vitest",

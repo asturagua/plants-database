@@ -21,14 +21,14 @@ export class PlantResolversService implements ResolverInterface {
                         console.error(err);
                     }
                 },
-                plantByName: async (_parent: any, args: PlantNameRequest) => {
+                plantByName: async (_parent: undefined, args: PlantNameRequest) => {
                     try {
                         return this.service.getPlantByName(args.nameFilter, args.nameType);
                     } catch (err) {
                         console.error(err);
                     }
                 },
-                plantsNativeTo: async (_parent: any, args: NativeRequest) => {
+                plantsNativeTo: async (_parent: undefined, args: NativeRequest) => {
                     try {
                         args.statesFilter.map(state => {
                             if (!STATES.includes(state.toUpperCase())) {
@@ -41,7 +41,7 @@ export class PlantResolversService implements ResolverInterface {
                         console.error(err);
                     }
                 },
-                plantsByGroupAndDistributionAndCharacteristics: async (_parent: any, args: PlantRequest) => {
+                plantsByGroupAndDistributionAndCharacteristics: async (_parent: undefined, args: PlantRequest) => {
                     try {
                         return this.service.getPlantsByGroupAndDistributionAndCharacteristics(args.groupNamesFilter, args.distributionFilter, args.characteristicsFilter);
                     } catch (err) {

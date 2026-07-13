@@ -1,11 +1,13 @@
 // @ts-check
 
 import js from '@eslint/js';
-import {defineConfig} from 'eslint/config';
+import {defineConfig, globalIgnores} from 'eslint/config';
 import tseslint from 'typescript-eslint';
 
-export default defineConfig({
-    files: ['**/*.{js,ts}'],
-    ignores: ['**/dist/**'],
-    extends: [js.configs.recommended, tseslint.configs.recommended],
-});
+export default defineConfig(
+    globalIgnores(['**/dist/**', '**/node_modules/**']),
+    {
+        files: ['**/*.{js,ts}'],
+        extends: [js.configs.recommended, tseslint.configs.recommended]
+    },
+);

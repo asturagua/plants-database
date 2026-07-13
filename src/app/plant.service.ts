@@ -21,7 +21,7 @@ export class PlantService {
     async getPlantsByGroupAndDistributionAndCharacteristics(
         groupsFilter?: string[],
         distributionFilter?: NativeRequest,
-        characteristicsFilter?: CharacteristicsRequest) {
+        characteristicsFilter?: CharacteristicsRequest): Promise<PlantMapping[]> {
         const dbPlantsWithDistributionAndCharacteristics =
             await this.repository.getPlantsByGroupAndDistributionAndCharacteristic(groupsFilter, distributionFilter, characteristicsFilter);
         if (!dbPlantsWithDistributionAndCharacteristics) {
@@ -87,6 +87,7 @@ export class PlantService {
         return this.mapCharacteristicsFromDb(dbCharacteristics);
     }
 
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     private mapDistributionFromDb(distribution: any): DistributionMapping {
         return {
             introducedStates: distribution.introduced_states,
@@ -120,6 +121,7 @@ export class PlantService {
         };
     }
 
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     private mapCharacteristicsFromDb(characteristics: any): CharacteristicMapping {
         return {
             activeGrowthPeriod: characteristics.active_growth_period,

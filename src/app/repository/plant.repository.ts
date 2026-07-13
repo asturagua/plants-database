@@ -47,6 +47,7 @@ export class PlantRepository implements PlantInterface {
     async getPlantsByGroupAndDistributionAndCharacteristic(
         groups?: string[],
         distribution?: NativeRequest,
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         characteristics?: CharacteristicsRequest): Promise<any[]> {
         let sql = PlantRepository.GET_PLANTS;
         const queryParts = [];
@@ -109,6 +110,7 @@ export class PlantRepository implements PlantInterface {
         return query.join(" AND ");
     }
 
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     async fetchAll(db:  Database.Database, sql: string, params: string[]): Promise<any> {
         try {
             const statement = db.prepare(sql);
