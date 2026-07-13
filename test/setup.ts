@@ -212,8 +212,8 @@ export const createMockDatabase = () => {
                 );
             });
             distributions.map(distribution => {
-                insertDistribution.run(distribution.plant_id, distribution.plant_symbol, `[${distribution.native_states?.map(state => `"${state}"`).join(",")}]`,
-                    `[${distribution.introduced_states?.map(state => `"${state}"`).join(",")}]`, distribution.total_native_states, distribution.total_introduced_states);
+                insertDistribution.run(distribution.plant_id, distribution.plant_symbol, distribution.native_states,
+                    distribution.introduced_states, distribution.total_native_states, distribution.total_introduced_states);
             });
             characteristics.map(characteristic => {
                 insertCharacteristic.run(characteristic.id, characteristic.plant_id, characteristic.flower_color);

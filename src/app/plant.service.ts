@@ -90,11 +90,26 @@ export class PlantService {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     private mapDistributionFromDb(distribution: any): DistributionMapping {
         return {
-            introducedStates: distribution.introduced_states,
-            nativeStates: distribution.native_states,
+            introducedStates: this.stringToArray(distribution.introduced_states),
+            nativeStates: this.stringToArray(distribution.native_states),
             plantId: distribution.plant_id,
             totalIntroducedStates: distribution.total_introduced_states,
             totalNativeStates: distribution.total_native_states
+        }
+    }
+
+    private stringToArray(stringArray: string) {
+        const strippedString = stringArray.trim();
+        if (strippedString.startsWith("[") && strippedString.endsWith("]")) {
+            return strippedString.substring(1, strippedString.length - 1)
+                .split(",")
+                .map(string => string.replace(/['"]/g, "")
+                    .trim());
+        } else {
+            return strippedString
+                .split(",")
+                .map(string => string.replace(/['"]/g, "")
+                    .trim());
         }
     }
 

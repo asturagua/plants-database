@@ -22,10 +22,10 @@ export type PlantMapping = {
 }
 
 export type DistributionMapping = {
-    [key: string]: Nullable<string> | number | undefined
+    [key: string]: Nullable<string> | string[] | number | undefined
     plantId: number
-    nativeStates?: Nullable<string>
-    introducedStates?: Nullable<string>
+    nativeStates?: string[]
+    introducedStates?: string[]
     totalNativeStates?: Nullable<number>
     totalIntroducedStates?: Nullable<number>
 }

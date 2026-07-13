@@ -47,16 +47,16 @@ export const testDistributions: PlantDistribution[] = [
     {
         plant_id: 123,
         plant_symbol: "TESTSYM",
-        native_states: ["New_York", "Maine", "New_Jersey", "Pennsylvania"],
-        introduced_states: ["Massachusetts"],
+        native_states: "[\"New_York\", 'Maine', \"New_Jersey\", \"Pennsylvania\"]",
+        introduced_states: "[\"Massachusetts\"]",
         total_native_states: 4,
         total_introduced_states: 1
     },
     {
         plant_id: 124,
         plant_symbol: "TESTSYM 2",
-        native_states: ["Florida"],
-        introduced_states: ["California", "Texas", "Pennsylvania"],
+        native_states: "['Florida']",
+        introduced_states: "[\"California\", \"Texas\", \"Pennsylvania\"]",
         total_native_states: 1,
         total_introduced_states: 3
     }

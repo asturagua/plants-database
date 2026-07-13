@@ -189,8 +189,8 @@ export type StatePlant = {
 export type PlantDistribution = {
     plant_id: number
     plant_symbol: string
-    native_states?: string[]
-    introduced_states?: string[]
+    native_states?: string
+    introduced_states?: string
     total_native_states?: Nullable<number>
     total_introduced_states?: Nullable<number>
 }

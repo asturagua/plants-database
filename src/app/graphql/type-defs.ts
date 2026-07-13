@@ -107,8 +107,8 @@ type PlantCharacteristic {
 type PlantDistribution {
     #    plantId: Int
     #    plantSymbol: String
-    nativeStates: String
-    introducedStates: String
+    nativeStates: [String]
+    introducedStates: [String]
     totalNativeStates: Int
     totalIntroducedStates: Int
 }

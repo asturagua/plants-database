@@ -78,15 +78,15 @@ describe('PlantService Integration Tests', () => {
     const testDistributions: DistributionMapping[] = [
         {
             plantId: 123,
-            nativeStates: "[\"New_York\",\"Maine\",\"New_Jersey\",\"Pennsylvania\"]",
-            introducedStates: "[\"Massachusetts\"]",
+            nativeStates: ["New_York", "Maine", "New_Jersey", "Pennsylvania"],
+            introducedStates: ["Massachusetts"],
             totalNativeStates: 4,
             totalIntroducedStates: 1,
         },
         {
             plantId: 124,
-            nativeStates: "[\"Florida\"]",
-            introducedStates: "[\"California\",\"Texas\",\"Pennsylvania\"]",
+            nativeStates: ["Florida"],
+            introducedStates: ["California", "Texas", "Pennsylvania"],
             totalNativeStates: 1,
             totalIntroducedStates: 3
         },
