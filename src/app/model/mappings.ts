@@ -31,7 +31,7 @@ export type DistributionMapping = {
 }
 
 export type CharacteristicMapping = {
-    [key: string]: Nullable<string> | number | number | undefined
+    [key: string]: Nullable<string> | Nullable<number> | number | undefined
     plantId: number
     activeGrowthPeriod?: Nullable<string>
     bloat?: Nullable<string>
@@ -40,79 +40,79 @@ export type CharacteristicMapping = {
     fallConspicuous?: Nullable<string>
     fireResistant?: Nullable<string>
     flowerColor?: Nullable<string>
-    flowerConspicuous?: string
-    foliageColor?: string
-    foliagePorositySummer?: string
-    foliagePorosityWinter?: string
-    foliageTexture?: string
-    fruitSeedColor?: string
-    fruitSeedConspicuous?: string
-    growthForm?: string
-    growthRate?: string
-    heightAt20YearsMaximumFeet?: string
-    heightMatureFeet?: string
-    knownAllelopath?: string
-    leafRetention?: string
-    lifespan?: string
-    lowGrowingGrass?: string
-    nitrogenFixation?: string
-    resproutAbility?: string
-    shapeAndOrientation?: string
-    toxicity?: string
-    adaptedToCoarseTexturedSoils?: string
-    adaptedToFineTexturedSoils?: string
-    adaptedToMediumTexturedSoils?: string
-    anaerobicTolerance?: string
-    caco3Tolerance?: string
-    coldStratificationRequired?: string
-    droughtTolerance?: string
-    fertilityRequirement?: string
-    fireTolerance?: string
-    frostFreeDaysMinimum?: string
-    hedgeTolerance?: string
-    moistureUse?: string
-    phMaximum?: number
-    phMinimum?: number
-    plantingDensityPerAcreMaximum?: string
-    plantingDensityPerAcreMinimum?: string
-    precipitationMaximum?: string
-    precipitationMinimum?: string
-    rootDepthMinimum?: string
-    salinityTolerance?: string
-    shadeTolerance?: string
-    temperatureMinimumF?: string
-    bloomPeriod?: string
-    commercialAvailability?: string
-    fruitSeedAbundance?: string
-    fruitSeedPeriodBegin?: string
-    fruitSeedPeriodEnd?: string
-    fruitSeedPersistence?: string
-    propagatedByBareRoot?: string
-    propagatedByBulb?: string
-    propagatedByContainer?: string
-    propagatedByCorm?: string
-    propagatedByCuttings?: string
-    propagatedBySeed?: string
-    propagatedBySod?: string
-    propagatedBySprigs?: string
-    propagatedByTubers?: string
-    seedPerPound?: string
-    seedSpreadRate?: string
-    seedlingVigor?: string
-    smallGrain?: string
-    vegetativeSpreadRate?: string
-    berryNutSeedProduct?: string
-    christmasTreeProduct?: string
-    fodderProduct?: string
-    fuelwoodProduct?: string
-    lumberProduct?: string
-    navalStoreProduct?: string
-    nurseryStockProduct?: string
-    palatableBrowseAnimal?: string
-    palatableHuman?: string
-    postProduct?: string
-    pulpwoodProduct?: string
-    veneerProduct?: string
+    flowerConspicuous?: Nullable<string>
+    foliageColor?: Nullable<string>
+    foliagePorositySummer?: Nullable<string>
+    foliagePorosityWinter?: Nullable<string>
+    foliageTexture?: Nullable<string>
+    fruitSeedColor?: Nullable<string>
+    fruitSeedConspicuous?: Nullable<string>
+    growthForm?: Nullable<string>
+    growthRate?: Nullable<string>
+    heightAt20YearsMaximumFeet?: Nullable<string>
+    heightMatureFeet?: Nullable<string>
+    knownAllelopath?: Nullable<string>
+    leafRetention?: Nullable<string>
+    lifespan?: Nullable<string>
+    lowGrowingGrass?: Nullable<string>
+    nitrogenFixation?: Nullable<string>
+    resproutAbility?: Nullable<string>
+    shapeAndOrientation?: Nullable<string>
+    toxicity?: Nullable<string>
+    adaptedToCoarseTexturedSoils?: Nullable<string>
+    adaptedToFineTexturedSoils?: Nullable<string>
+    adaptedToMediumTexturedSoils?: Nullable<string>
+    anaerobicTolerance?: Nullable<string>
+    caco3Tolerance?: Nullable<string>
+    coldStratificationRequired?: Nullable<string>
+    droughtTolerance?: Nullable<string>
+    fertilityRequirement?: Nullable<string>
+    fireTolerance?: Nullable<string>
+    frostFreeDaysMinimum?: Nullable<string>
+    hedgeTolerance?: Nullable<string>
+    moistureUse?: Nullable<string>
+    phMaximum?: Nullable<number>
+    phMinimum?: Nullable<number>
+    plantingDensityPerAcreMaximum?: Nullable<string>
+    plantingDensityPerAcreMinimum?: Nullable<string>
+    precipitationMaximum?: Nullable<string>
+    precipitationMinimum?: Nullable<string>
+    rootDepthMinimum?: Nullable<string>
+    salinityTolerance?: Nullable<string>
+    shadeTolerance?: Nullable<string>
+    temperatureMinimumF?: Nullable<string>
+    bloomPeriod?: Nullable<string>
+    commercialAvailability?: Nullable<string>
+    fruitSeedAbundance?: Nullable<string>
+    fruitSeedPeriodBegin?: Nullable<string>
+    fruitSeedPeriodEnd?: Nullable<string>
+    fruitSeedPersistence?: Nullable<string>
+    propagatedByBareRoot?: Nullable<string>
+    propagatedByBulb?: Nullable<string>
+    propagatedByContainer?: Nullable<string>
+    propagatedByCorm?: Nullable<string>
+    propagatedByCuttings?: Nullable<string>
+    propagatedBySeed?: Nullable<string>
+    propagatedBySod?: Nullable<string>
+    propagatedBySprigs?: Nullable<string>
+    propagatedByTubers?: Nullable<string>
+    seedPerPound?: Nullable<string>
+    seedSpreadRate?: Nullable<string>
+    seedlingVigor?: Nullable<string>
+    smallGrain?: Nullable<string>
+    vegetativeSpreadRate?: Nullable<string>
+    berryNutSeedProduct?: Nullable<string>
+    christmasTreeProduct?: Nullable<string>
+    fodderProduct?: Nullable<string>
+    fuelwoodProduct?: Nullable<string>
+    lumberProduct?: Nullable<string>
+    navalStoreProduct?: Nullable<string>
+    nurseryStockProduct?: Nullable<string>
+    palatableBrowseAnimal?: Nullable<string>
+    palatableHuman?: Nullable<string>
+    postProduct?: Nullable<string>
+    pulpwoodProduct?: Nullable<string>
+    veneerProduct?: Nullable<string>
 }
 
 export type PlantTaxonomicPath = {

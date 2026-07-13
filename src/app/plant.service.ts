@@ -10,14 +10,30 @@ export class PlantService {
         this.repository = repository;
     }
 
+    /**
+     * Gets all plants.
+     */
     async getPlants(): Promise<PlantMapping[]> {
         return (await this.repository.getPlants()).map(plant => this.mapPlantFromDb(plant));
     }
 
+    /**
+     * Gets plant by common name or scientific name.
+     * @param name Name of plant to filter by
+     * @param nameType COMMON or SCIENTIFIC. If not specified, will search both common and scientific names for matches.
+     */
     async getPlantByName(name: string, nameType?: string): Promise<PlantMapping[]> {
         return (await this.repository.getPlantByName(name, nameType)).map(plant => this.mapPlantFromDb(plant))
     }
 
+    /**
+     * Get plants filtered by group and distribution and characteristics.
+     * Filters are optional, but the service will only return distribution and characteristic data if the respective
+     * filters are specified.
+     * @param groupsFilter A string array of plant groups to filter by
+     * @param distributionFilter A filter that includes a string array of states to filter by and whether to include introduced states
+     * @param characteristicsFilter A filter for various plant characteristics
+     */
     async getPlantsByGroupAndDistributionAndCharacteristics(
         groupsFilter?: string[],
         distributionFilter?: NativeRequest,
@@ -28,34 +44,22 @@ export class PlantService {
             return [];
         }
         return dbPlantsWithDistributionAndCharacteristics.map(plant => {
-            // TODO tests that verify distribution and characteristics are only set to non-null if the they were part of the request
             const distribution = distributionFilter ? this.mapDistributionFromDb(plant) : null;
             const characteristics = characteristicsFilter ? this.mapCharacteristicsFromDb(plant) : null;
-            return {
-                acceptedId: plant.accepted_id,
-                commonName: plant.common_name,
-                distribution: distribution,
-                characteristics: characteristics,
-                durations: plant.durations,
-                factSheetUrls: plant.fact_sheet_urls,
-                groupName: plant.group_name,
-                growthHabits: plant.growth_habits,
-                id: plant.plant_id, // TODO I should refine the database SELECT to not include all IDs, or alias them
-                imageId: plant.image_id,
-                numImages: plant.num_images,
-                otherCommonNames: plant.other_common_names,
-                plantGuideUrls: plant.plant_guide_urls,
-                plantLocationId: plant.plant_location_id,
-                profileImageFilename: plant.profile_image_filename,
-                profileImageUrl: plant.profile_image_filename,
-                rank: plant.rank,
-                rankId: plant.rank_id,
-                scientificName: plant.scientific_name,
-                symbol: plant.symbol
-            }
-        })
+            const mappedPlant = this.mapPlantFromDb(plant);
+            mappedPlant.id = plant.v_plant_id;
+            mappedPlant.characteristics = characteristics;
+            mappedPlant.distribution = distribution;
+            return mappedPlant
+        });
     }
 
+    /**
+     * Get plants native to and introduced to states.
+     * TODO might remove this in favor of just getPlantsByGroupAndDistributionAndCharacteristics
+     * @param states A string array of US states to filter plants by
+     * @param includeIntroduced Whether to include plants introduced to the state
+     */
     async getPlantsNativeTo(states: string[], includeIntroduced: boolean): Promise<PlantMapping[]> {
         const dbPlantsWithDistribution = await this.repository.getPlantsNativeTo(states, includeIntroduced)
         if (!dbPlantsWithDistribution) {
@@ -71,6 +75,10 @@ export class PlantService {
         });
     }
 
+    /**
+     * Get plant distribution for a single plant.
+     * @param plantId Plant id
+     */
     async getPlantDistribution(plantId: number): Promise<DistributionMapping | null> {
         const dbDistribution = (await this.repository.getPlantDistribution(plantId))[0];
         if (!dbDistribution) {
@@ -79,6 +87,10 @@ export class PlantService {
         return this.mapDistributionFromDb(dbDistribution);
     }
 
+    /**
+     * Get plant characteristics for a single plant.
+     * @param plantId Plant id
+     */
     async getPlantCharacteristics(plantId: number): Promise<CharacteristicMapping | null> {
         const dbCharacteristics = (await this.repository.getPlantCharacteristics(plantId))[0];
         if (!dbCharacteristics) {
@@ -99,18 +111,16 @@ export class PlantService {
     }
 
     private stringToArray(stringArray: string) {
-        const strippedString = stringArray.trim();
+        let strippedString = stringArray.trim();
         if (strippedString.startsWith("[") && strippedString.endsWith("]")) {
-            return strippedString.substring(1, strippedString.length - 1)
-                .split(",")
-                .map(string => string.replace(/['"]/g, "")
-                    .trim());
-        } else {
-            return strippedString
-                .split(",")
-                .map(string => string.replace(/['"]/g, "")
-                    .trim());
+            strippedString = strippedString.substring(1, strippedString.length - 1)
         }
+        return strippedString
+            .split(",")
+            .filter(array => array.length > 0)
+            .map(string => string.replace(/['"]/g, "")
+                .trim());
+
     }
 
     private mapPlantFromDb(plant: Plant): PlantMapping {

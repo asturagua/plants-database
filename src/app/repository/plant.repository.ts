@@ -49,7 +49,7 @@ export class PlantRepository implements PlantInterface {
         distribution?: NativeRequest,
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         characteristics?: CharacteristicsRequest): Promise<any[]> {
-        let sql = PlantRepository.GET_PLANTS;
+        let sql = `SELECT p.id AS v_plant_id, * FROM plants p`;
         const queryParts = [];
         if ((distribution && distribution.statesFilter) || characteristics) {
             const plantFilters = [];

@@ -5,7 +5,7 @@ import {mock} from "vitest-mock-extended";
 import {PlantRepository} from "../src/app/repository/plant.repository.js";
 import Database from "better-sqlite3";
 import {createMockDatabase} from "./setup.js";
-import {DistributionMapping, PlantMapping} from "../src/app/model/mappings.js";
+import {CharacteristicMapping, DistributionMapping, PlantMapping} from "../src/app/model/mappings.js";
 
 vi.mock('#app/repository/plant.interface.js', () => {
     return {}
@@ -58,7 +58,7 @@ describe('PlantService Integration Tests', () => {
             commonName: "INTEGRATION TEST 2",
             durations: "durers",
             factSheetUrls: "test.com",
-            groupName: "Moss",
+            groupName: "Dicot",
             growthHabits: "fast",
             id: 124,
             imageId: 324,
@@ -72,6 +72,46 @@ describe('PlantService Integration Tests', () => {
             rankId: 180,
             scientificName: "TESTIA INTEGRA 2",
             symbol: "TESTSYM 2",
+        },
+        {
+            acceptedId: 4234234,
+            commonName: "Planty plant",
+            durations: "durararara",
+            factSheetUrls: "plant-test.com",
+            groupName: "Lichen",
+            growthHabits: "slow",
+            id: 125,
+            imageId: 132,
+            numImages: 1,
+            otherCommonNames: "Plant",
+            plantGuideUrls: "test-guide.com",
+            plantLocationId: 3455,
+            profileImageFilename: "mfwdawd.jpg",
+            profileImageUrl: "dsdffesf.com",
+            rank: "Species",
+            rankId: 180,
+            scientificName: "Plantica plantus",
+            symbol: "PLPL",
+        },
+        {
+            acceptedId: 4234234,
+            commonName: "Rydia Mist",
+            durations: "durararara",
+            factSheetUrls: "ffiv.com/adawdawwa",
+            groupName: "Moss",
+            growthHabits: "slow",
+            id: 126,
+            imageId: 435,
+            numImages: 1,
+            otherCommonNames: "Green Summoner",
+            plantGuideUrls: "ffiv.com/dwadad",
+            plantLocationId: 3455,
+            profileImageFilename: "ffiv.jpg",
+            profileImageUrl: "ffiv.com",
+            rank: "Species",
+            rankId: 180,
+            scientificName: "Rydia Mistica",
+            symbol: "RYMI",
         }
     ];
 
@@ -90,6 +130,99 @@ describe('PlantService Integration Tests', () => {
             totalNativeStates: 1,
             totalIntroducedStates: 3
         },
+        {
+            plantId: 126,
+            nativeStates: ["Maine", "Vermont"],
+            introducedStates: [],
+            totalNativeStates: 1,
+            totalIntroducedStates: 3
+        }
+    ]
+
+    const testCharacteristics: CharacteristicMapping[] = [
+        {
+            activeGrowthPeriod: null,
+            adaptedToCoarseTexturedSoils: null,
+            adaptedToFineTexturedSoils: null,
+            adaptedToMediumTexturedSoils: null,
+            anaerobicTolerance: null,
+            berryNutSeedProduct: null,
+            bloat: null,
+            bloomPeriod: null,
+            cNRatio: null,
+            caco3Tolerance: null,
+            christmasTreeProduct: null,
+            coldStratificationRequired: null,
+            commercialAvailability: null,
+            coppicePotential: null,
+            droughtTolerance: null,
+            fallConspicuous: null,
+            fertilityRequirement: null,
+            fireResistant: null,
+            fireTolerance: null,
+            flowerColor: "Green",
+            flowerConspicuous: null,
+            fodderProduct: null,
+            foliageColor: null,
+            foliagePorositySummer: null,
+            foliagePorosityWinter: null,
+            foliageTexture: null,
+            frostFreeDaysMinimum: null,
+            fruitSeedAbundance: null,
+            fruitSeedColor: null,
+            fruitSeedConspicuous: null,
+            fruitSeedPeriodBegin: null,
+            fruitSeedPeriodEnd: null,
+            fruitSeedPersistence: null,
+            fuelwoodProduct: null,
+            growthForm: null,
+            growthRate: null,
+            hedgeTolerance: null,
+            heightAt20YearsMaximumFeet: null,
+            heightMatureFeet: null,
+            knownAllelopath: null,
+            leafRetention: null,
+            lifespan: null,
+            lowGrowingGrass: null,
+            lumberProduct: null,
+            moistureUse: null,
+            navalStoreProduct: null,
+            nitrogenFixation: null,
+            nurseryStockProduct: null,
+            palatableBrowseAnimal: null,
+            palatableHuman: null,
+            phMaximum: null,
+            phMinimum: null,
+            plantId: 126,
+            plantingDensityPerAcreMaximum: null,
+            plantingDensityPerAcreMinimum: null,
+            postProduct: null,
+            precipitationMaximum: null,
+            precipitationMinimum: null,
+            propagatedByBareRoot: null,
+            propagatedByBulb: null,
+            propagatedByContainer: null,
+            propagatedByCorm: null,
+            propagatedByCuttings: null,
+            propagatedBySeed: null,
+            propagatedBySod: null,
+            propagatedBySprigs: null,
+            propagatedByTubers: null,
+            pulpwoodProduct: null,
+            resproutAbility: null,
+            rootDepthMinimum: null,
+            salinityTolerance: null,
+            seedPerPound: null,
+            seedSpreadRate: null,
+            seedlingVigor: null,
+            shadeTolerance: null,
+            shapeAndOrientation: null,
+            smallGrain: null,
+            temperatureMinimumF: null,
+            toxicity: null,
+            vegetativeSpreadRate: null,
+            veneerProduct: null,
+        }
     ]
 
     let mockDb: Database.Database;
@@ -148,5 +281,43 @@ describe('PlantService Integration Tests', () => {
         expect(await service.getPlantsNativeTo(["Pennsylvania"], false)).toEqual([expected]);
     });
 
-    // TODO characteristics tests
+    test('should get plants with group Moss', async () => {
+        const expected1 = testPlantsMapping[0];
+        expected1.distribution = null;
+        expected1.characteristics = null;
+        const expected2 = testPlantsMapping[3];
+        expected2.distribution = null;
+        expected2.characteristics = null;
+        expect(await service.getPlantsByGroupAndDistributionAndCharacteristics(["Moss"], undefined, undefined)).toEqual([expected1, expected2])
+    });
+
+    test('should get plants with group Moss and native to Vermont', async () => {
+        const expected = testPlantsMapping[3];
+        expected.distribution = testDistributions[2];
+        expected.characteristics = null;
+        expect(await service.getPlantsByGroupAndDistributionAndCharacteristics(["Moss"], {statesFilter: ["vermont"]}, undefined)).toEqual([expected])
+    });
+
+    test('should get plants with group Moss, native to Vermont, and flower color green', async () => {
+        const expected = testPlantsMapping[3];
+        expected.distribution = testDistributions[2];
+        expected.characteristics = testCharacteristics[0];
+        expect(await service.getPlantsByGroupAndDistributionAndCharacteristics(["Moss"], {statesFilter: ["vermont"]}, {flowerColor: "green"})).toEqual([expected])
+    });
+
+    test('should return empty array when no match found for getPlantsByGroupAndDistributionAndCharacteristics', async () => {
+        expect(await service.getPlantsByGroupAndDistributionAndCharacteristics(["Moss"], {statesFilter: ["vermont"]}, {flowerColor: "purple"})).toEqual([])
+    });
+
+    test('should get plant distribution by plant id', async () => {
+        expect(await service.getPlantDistribution(123)).toEqual(testDistributions[0]);
+    });
+
+    test('should get null plant distribution by plant id', async () => {
+        expect(await service.getPlantDistribution(125)).toEqual(null);
+    });
+
+    test('should get null plant characteristics by plant id', async () => {
+        expect(await service.getPlantCharacteristics(124)).toEqual(null);
+    });
 })
