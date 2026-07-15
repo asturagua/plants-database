@@ -47,7 +47,7 @@ COPY tsconfig.json .
 COPY --from=deps /usr/src/app/node_modules ./node_modules
 COPY src/ ./src
 # Run the build script.
-RUN npm run build
+RUN npm run build:dev
 
 ################################################################################
 # Create a new stage to run the application with minimal runtime dependencies
@@ -73,4 +73,4 @@ COPY --from=build /usr/src/app/dist ./dist
 EXPOSE 4000
 
 # Run the application.
-ENTRYPOINT ["node", "./dist/index.js"]
+ENTRYPOINT ["node", "./dist/src/app/index.js"]
